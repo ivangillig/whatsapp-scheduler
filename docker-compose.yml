@@ -11,12 +11,14 @@ services:
       # Persistir datos fuera del contenedor
       - ./data/db:/app/data
       - ./data/auth:/app/data/auth
-    env_file:
-      - stack.env
     environment:
       - NODE_ENV=production
       - PORT=3001
       - FRONTEND_URL=https://schedule.kabeza.fan
+      # Auth - configurar en Portainer:
+      # - JWT_SECRET
+      # - ADMIN_USER
+      # - ADMIN_PASSWORD
     networks:
       - apps
 

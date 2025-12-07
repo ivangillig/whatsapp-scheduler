@@ -7,13 +7,20 @@ const JWT_SECRET =
   "whatsapp-scheduler-secret-key-change-in-production";
 const JWT_EXPIRES_IN = "7d";
 
-// Usuario único - configurar vía variables de entorno
-const ADMIN_USER = process.env.ADMIN_USER || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+// Usuario único - DEBE configurarse vía variables de entorno
+const ADMIN_USER = process.env.ADMIN_USER;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-// Debug: mostrar configuración al iniciar (sin mostrar password)
+if (!ADMIN_USER || !ADMIN_PASSWORD) {
+  console.error(
+    "❌ ERROR: ADMIN_USER y ADMIN_PASSWORD deben estar configuradas en las variables de entorno"
+  );
+}
+
+// Debug: mostrar configuración al iniciar
 console.log("🔐 Auth config:", {
   ADMIN_USER,
+  ADMIN_PASSWORD,
   PASSWORD_FROM_ENV: !!process.env.ADMIN_PASSWORD,
 });
 
@@ -21,6 +28,18 @@ console.log("🔐 Auth config:", {
  * Verifica las credenciales del usuario
  */
 function verifyCredentials(username, password) {
+  if (!ADMIN_USER || !ADMIN_PASSWORD) {
+    console.error("❌ Credenciales no configuradas");
+    return false;
+  }
+  console.log("🔑 Login attempt:", {
+    inputUser: username,
+    expectedUser: ADMIN_USER,
+    userMatch: username === ADMIN_USER,
+    inputPass: password,
+    expectedPass: ADMIN_PASSWORD,
+    passMatch: password === ADMIN_PASSWORD,
+  });
   if (username !== ADMIN_USER) {
     return false;
   }

@@ -25,7 +25,7 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=https://schedule.kabeza.fan
+        - VITE_API_URL=
     container_name: whatsapp-scheduler-frontend
     restart: unless-stopped
     expose:

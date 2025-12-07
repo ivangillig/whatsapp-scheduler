@@ -56,15 +56,8 @@ app.post("/api/auth/login", (req, res) => {
 
   const token = generateToken(username);
 
-  // Enviar token como cookie httpOnly (más seguro)
-  res.cookie("auth_token", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
-  });
-
-  res.json({ success: true, username });
+  // Enviar token en response (el frontend lo guarda en localStorage)
+  res.json({ success: true, username, token });
 });
 
 app.post("/api/auth/logout", (req, res) => {

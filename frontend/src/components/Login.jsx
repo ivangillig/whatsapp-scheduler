@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lock, User, Loader2, MessageSquare } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,10 +26,9 @@ function Login({ onLogin }) {
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
 
@@ -39,7 +40,7 @@ function Login({ onLogin }) {
         return;
       }
 
-      onLogin(data.username);
+      onLogin(data.username, data.token);
     } catch (err) {
       setError("Error de conexión");
       setIsLoading(false);

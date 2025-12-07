@@ -41,8 +41,9 @@ function App() {
   useEffect(() => {
     if (!isAuthenticated) return;
 
+    const token = localStorage.getItem("auth_token");
     const newSocket = io(API_URL || window.location.origin, {
-      withCredentials: true,
+      auth: { token },
     });
 
     setSocket(newSocket);
@@ -82,8 +83,16 @@ function App() {
 
   const checkAuth = async () => {
     try {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        setIsAuthenticated(false);
+        setIsCheckingAuth(false);
+        return;
+      }
       const res = await fetch(`${API_URL}/api/auth/check`, {
-        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       setIsAuthenticated(data.authenticated);
@@ -96,31 +105,41 @@ function App() {
     }
   };
 
-  const handleLogin = (user) => {
+  const handleLogin = (user, token) => {
+    localStorage.setItem("auth_token", token);
     setUsername(user);
     setIsAuthenticated(true);
   };
 
   const handleAppLogout = async () => {
     try {
+      const token = localStorage.getItem("auth_token");
       await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
-        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
     } catch (error) {
       console.error("Error logging out:", error);
     }
+    localStorage.removeItem("auth_token");
     setIsAuthenticated(false);
     setUsername("");
     socket?.close();
   };
 
   const fetchWithAuth = async (url, options = {}) => {
+    const token = localStorage.getItem("auth_token");
     const res = await fetch(`${API_URL}${url}`, {
       ...options,
-      credentials: "include",
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (res.status === 401) {
+      localStorage.removeItem("auth_token");
       setIsAuthenticated(false);
       throw new Error("No autorizado");
     }

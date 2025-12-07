@@ -15,10 +15,9 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - FRONTEND_URL=https://schedule.kabeza.fan
-      # Auth - configurar en Portainer:
-      # - JWT_SECRET
-      # - ADMIN_USER
-      # - ADMIN_PASSWORD
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     networks:
       - apps
 

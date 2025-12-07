@@ -14,7 +14,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - FRONTEND_URL=https://schedule.kabeza.fan
+      - FRONTEND_URL=https://schedule.kabeza.fun
       - JWT_SECRET=${JWT_SECRET}
       - ADMIN_USER=${ADMIN_USER}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
@@ -25,7 +25,7 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=https://schedule-api.kabeza.fan
+        - VITE_API_URL=https://schedule-api.kabeza.fun
     container_name: whatsapp-scheduler-frontend
     restart: unless-stopped
     expose:
@@ -33,7 +33,7 @@ services:
     depends_on:
       - whatsapp-scheduler-backend
     environment:
-      - VIRTUAL_HOST=schedule.kabeza.fan
+      - VIRTUAL_HOST=schedule.kabeza.fun
       - VIRTUAL_PORT=80
     networks:
       - apps

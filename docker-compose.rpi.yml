@@ -1,0 +1,45 @@
+# docker-compose para Raspberry Pi (ARM64)
+# Usa imágenes compatibles con arquitectura ARM
+
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: whatsapp-scheduler-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - whatsapp-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - FRONTEND_URL=http://raspberrypi.local
+    networks:
+      - whatsapp-network
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Cambiar por la IP o hostname de tu Raspberry
+        - VITE_API_URL=http://raspberrypi.local:3001
+    container_name: whatsapp-scheduler-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - whatsapp-network
+
+volumes:
+  whatsapp-data:
+    driver: local
+
+networks:
+  whatsapp-network:
+    driver: bridge

@@ -12,14 +12,28 @@ const ADMIN_USER = process.env.ADMIN_USER || "admin";
 const ADMIN_PASSWORD_HASH =
   process.env.ADMIN_PASSWORD_HASH || bcrypt.hashSync("admin123", 10);
 
+// Debug: mostrar configuración al iniciar
+console.log("🔐 Auth config:", {
+  ADMIN_USER,
+  HASH_FROM_ENV: !!process.env.ADMIN_PASSWORD_HASH,
+  HASH_LENGTH: ADMIN_PASSWORD_HASH?.length,
+});
+
 /**
  * Verifica las credenciales del usuario
  */
 function verifyCredentials(username, password) {
+  console.log("🔑 Login attempt:", {
+    username,
+    providedUser: ADMIN_USER,
+    match: username === ADMIN_USER,
+  });
   if (username !== ADMIN_USER) {
     return false;
   }
-  return bcrypt.compareSync(password, ADMIN_PASSWORD_HASH);
+  const result = bcrypt.compareSync(password, ADMIN_PASSWORD_HASH);
+  console.log("🔑 Password check:", { result });
+  return result;
 }
 
 /**

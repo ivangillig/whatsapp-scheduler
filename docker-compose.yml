@@ -12,15 +12,11 @@ services:
       - ./data/db:/app/data
       - ./data/auth:/app/data/auth
     env_file:
-      - .env
+      - stack.env
     environment:
       - NODE_ENV=production
       - PORT=3001
       - FRONTEND_URL=https://schedule.kabeza.fan
-      # Autenticación - En local usa .env, en Portainer configurar manualmente:
-      # - JWT_SECRET: secreto seguro para tokens
-      # - ADMIN_USER: usuario de login
-      # - ADMIN_PASSWORD_HASH: hash bcrypt de la contraseña
     networks:
       - apps
 

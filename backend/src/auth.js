@@ -9,31 +9,22 @@ const JWT_EXPIRES_IN = "7d";
 
 // Usuario único - configurar vía variables de entorno
 const ADMIN_USER = process.env.ADMIN_USER || "admin";
-const ADMIN_PASSWORD_HASH =
-  process.env.ADMIN_PASSWORD_HASH || bcrypt.hashSync("admin123", 10);
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
-// Debug: mostrar configuración al iniciar
+// Debug: mostrar configuración al iniciar (sin mostrar password)
 console.log("🔐 Auth config:", {
   ADMIN_USER,
-  HASH_FROM_ENV: !!process.env.ADMIN_PASSWORD_HASH,
-  HASH_LENGTH: ADMIN_PASSWORD_HASH?.length,
+  PASSWORD_FROM_ENV: !!process.env.ADMIN_PASSWORD,
 });
 
 /**
  * Verifica las credenciales del usuario
  */
 function verifyCredentials(username, password) {
-  console.log("🔑 Login attempt:", {
-    username,
-    providedUser: ADMIN_USER,
-    match: username === ADMIN_USER,
-  });
   if (username !== ADMIN_USER) {
     return false;
   }
-  const result = bcrypt.compareSync(password, ADMIN_PASSWORD_HASH);
-  console.log("🔑 Password check:", { result });
-  return result;
+  return password === ADMIN_PASSWORD;
 }
 
 /**
